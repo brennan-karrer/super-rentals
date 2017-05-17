@@ -33,6 +33,22 @@ test('should list available rentals', function(assert) {
   });
 });
 
-test('should filter the list of rentals by city', function(assert) {});
+test('should filter the list of rentals by city', function(assert) {
+  visit('/');
+  fillIn('.list-filter input', 'Seattle');
+  keyEvent('.list-filter input', 'keyup', '69');
+  andThen(function() {
+    assert.equal(find('.listing').length, 1, 'Should show 1 listing');
+    assert.equal(find('.listing .location:contains("Seattle")').length, 1, 'Should contain 1 listing with location Seattle');
+  });
+});
 
-test('should show details for a selected rental', function(assert) {});
+test('should show details for a selected rental', function(assert) {
+  visit('/rentals');
+  click('a:container("Grand Old Mansion")');
+  andThen(function() {
+    assert.equal(currentURL(), '/rentals/grand-old-mansion', 'Should navigate to show route');
+    assert.equal(find('.show-listing h2').text(), 'Grand Old Mansion', 'Shoud list the rental title');
+    assert.equal(find('.description').length, 1, 'Should list a description of the property');
+  });
+});
